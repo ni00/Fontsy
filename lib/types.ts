@@ -13,7 +13,7 @@ export interface PreviewSize {
 }
 
 // Output format type
-export type OutputFormat = "png" | "svg"
+export type OutputFormat = "png" | "svg" | "jpeg" | "webp" | "avif"
 
 // Logo configuration type
 export interface LogoConfig {

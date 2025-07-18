@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Resolution, OutputFormat, GenerateParams } from "@/lib/types"
 import { RESOLUTIONS, DEFAULT_CONFIG } from "@/lib/constants"
-import { loadGoogleFont, generatePNG, generateSVG, downloadPNG, downloadSVG, getFileName } from "@/lib/logo-utils"
+import { loadGoogleFont, generatePNG, generateSVG, downloadPNG, downloadSVG, downloadJPEG, downloadWebP, downloadAVIF, getFileName } from "@/lib/logo-utils"
 
 export const useLogoGenerator = () => {
   // Basic configuration state
@@ -13,6 +13,7 @@ export const useLogoGenerator = () => {
   const [transparency, setTransparency] = useState([DEFAULT_CONFIG.transparency])
   const [borderRadius, setBorderRadius] = useState([DEFAULT_CONFIG.borderRadius])
   const [outputFormat, setOutputFormat] = useState<OutputFormat>(DEFAULT_CONFIG.outputFormat as OutputFormat)
+  const [quality, setQuality] = useState(DEFAULT_CONFIG.quality)
   
   // Resolution related state
   const [resolution, setResolution] = useState<Resolution>(RESOLUTIONS[DEFAULT_CONFIG.defaultResolutionIndex])
@@ -85,12 +86,28 @@ export const useLogoGenerator = () => {
     const params = getGenerateParams()
     const filename = getFileName(params.width, params.height, outputFormat)
 
-    if (outputFormat === "png") {
-      generatePNG(canvas, params)
-      downloadPNG(canvas, filename)
-    } else {
-      const svgContent = generateSVG(params)
-      downloadSVG(svgContent, filename)
+    switch (outputFormat) {
+      case "png":
+        generatePNG(canvas, params)
+        downloadPNG(canvas, filename)
+        break
+      case "jpeg":
+        generatePNG(canvas, params)
+        downloadJPEG(canvas, filename.replace('.png', '.jpeg'), quality / 100)
+        break
+      case "webp":
+        generatePNG(canvas, params)
+        downloadWebP(canvas, filename.replace('.png', '.webp'), quality / 100)
+        break
+      case "avif":
+        generatePNG(canvas, params)
+        downloadAVIF(canvas, filename.replace('.png', '.avif'), quality / 100)
+        break
+      case "svg":
+      default:
+        const svgContent = generateSVG(params)
+        downloadSVG(svgContent, filename)
+        break
     }
   }
 
@@ -135,6 +152,7 @@ export const useLogoGenerator = () => {
     transparency,
     borderRadius,
     outputFormat,
+    quality,
     resolution,
     customWidth,
     customHeight,
@@ -157,6 +175,7 @@ export const useLogoGenerator = () => {
     setTransparency,
     setBorderRadius,
     setOutputFormat,
+    setQuality,
     setResolution,
     setCustomWidth,
     setCustomHeight,

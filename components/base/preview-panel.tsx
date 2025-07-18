@@ -61,6 +61,7 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
   const currentPreviewHeight = previewHeight[0]
   
   const previewStyle = calculatePreviewStyle(
+    text,
     fontFamily,
     fontSize,
     textColor,
@@ -128,31 +129,77 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
             </div>
           </div>
 
-          {/* Preset size quick buttons */}
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-            {PREVIEW_SIZES.map((size) => (
-              <Button
-                key={size.name}
-                variant="outline"
-                size="sm"
-                onClick={() => setPreviewSize(size.width, size.height)}
-                className="text-xs"
-              >
-                {size.name}
-              </Button>
-            ))}
+          {/* Preset size quick buttons - horizontally scrollable with custom styling */}
+          <div className="space-y-3">
+            <div>
+              <Label className="text-xs font-medium text-gray-600">Social Media</Label>
+              <div className="flex gap-2 overflow-x-auto pb-2 mt-1 scroll-smooth scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" 
+                   onWheel={(e) => {
+                     const container = e.currentTarget
+                     container.scrollLeft += e.deltaY
+                     e.preventDefault()
+                   }}>
+                {PREVIEW_SIZES.filter(s => ["Instagram Post", "Twitter Header", "Facebook Cover", "YouTube Thumb", "LinkedIn Post"].includes(s.name)).map((size) => (
+                  <Button key={size.name} variant="outline" size="sm" onClick={() => setPreviewSize(size.width, size.height)} className="text-xs flex-shrink-0 hover:bg-blue-100 transition-colors">
+                    {size.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-xs font-medium text-gray-600">Icons & Favicons</Label>
+              <div className="flex gap-2 overflow-x-auto pb-2 mt-1 scroll-smooth scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" 
+                   onWheel={(e) => {
+                     const container = e.currentTarget
+                     container.scrollLeft += e.deltaY
+                     e.preventDefault()
+                   }}>
+                {PREVIEW_SIZES.filter(s => ["App Icon", "Store Icon", "Favicon 16", "Favicon 32", "Favicon 64"].includes(s.name)).map((size) => (
+                  <Button key={size.name} variant="outline" size="sm" onClick={() => setPreviewSize(size.width, size.height)} className="text-xs flex-shrink-0 hover:bg-blue-100 transition-colors">
+                    {size.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-xs font-medium text-gray-600">Common Sizes</Label>
+              <div className="flex gap-2 overflow-x-auto pb-2 mt-1 scroll-smooth scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" 
+                   onWheel={(e) => {
+                     const container = e.currentTarget
+                     container.scrollLeft += e.deltaY
+                     e.preventDefault()
+                   }}>
+                {PREVIEW_SIZES.filter(s => ["Small", "Medium", "Large", "Square", "Landscape", "Portrait", "Wide", "Classic", "OG Ratio"].includes(s.name)).map((size) => (
+                  <Button key={size.name} variant="outline" size="sm" onClick={() => setPreviewSize(size.width, size.height)} className="text-xs flex-shrink-0 hover:bg-blue-100 transition-colors">
+                    {size.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Preview area */}
         <div className="flex items-center justify-center p-4 sm:p-8 bg-gray-50 rounded-lg overflow-auto">
-          <div ref={previewRef} style={previewStyle}>
-            {text}
+          <div className="relative">
+            <div 
+              ref={previewRef} 
+              style={previewStyle}
+              className="border border-gray-300 shadow-sm"
+            >
+              {text}
+            </div>
+            <div className="absolute -bottom-6 left-0 right-0 text-center text-xs text-gray-500">
+              {currentPreviewWidth} × {currentPreviewHeight}px
+            </div>
           </div>
         </div>
         
-        <div className="text-center text-xs sm:text-sm text-gray-600">
-          Preview: {currentPreviewWidth} × {currentPreviewHeight}px | Export: {getCurrentResolution().width} × {getCurrentResolution().height}px
+        <div className="text-center text-xs sm:text-sm text-gray-600 mt-6">
+          Export: {getCurrentResolution().width} × {getCurrentResolution().height}px 
+          <span className="text-gray-400">({Math.round((currentPreviewWidth / getCurrentResolution().width) * 100)}% preview scale)</span>
         </div>
       </CardContent>
     </Card>

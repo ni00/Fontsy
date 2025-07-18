@@ -12,10 +12,12 @@ interface ExportSettingsProps {
   customWidth: number
   customHeight: number
   outputFormat: OutputFormat
+  quality: number
   setResolution: (resolution: Resolution) => void
   setCustomWidth: (width: number) => void
   setCustomHeight: (height: number) => void
   setOutputFormat: (format: OutputFormat) => void
+  setQuality: (quality: number) => void
   downloadFile: () => void
 }
 
@@ -24,10 +26,12 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
   customWidth,
   customHeight,
   outputFormat,
+  quality,
   setResolution,
   setCustomWidth,
   setCustomHeight,
   setOutputFormat,
+  setQuality,
   downloadFile,
 }) => {
   return (
@@ -94,11 +98,28 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="png">PNG (Raster)</SelectItem>
+              <SelectItem value="png">PNG (Lossless)</SelectItem>
+              <SelectItem value="jpeg">JPEG (Lossy)</SelectItem>
+              <SelectItem value="webp">WebP (Modern)</SelectItem>
+              <SelectItem value="avif">AVIF (Next-gen)</SelectItem>
               <SelectItem value="svg">SVG (Vector)</SelectItem>
             </SelectContent>
           </Select>
         </div>
+
+        {['jpeg', 'webp', 'avif'].includes(outputFormat) && (
+          <div>
+            <Label className="text-sm">Quality: {quality}%</Label>
+            <input
+              type="range"
+              min="10"
+              max="100"
+              value={quality}
+              onChange={(e) => setQuality(Number(e.target.value))}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-1"
+            />
+          </div>
+        )}
 
         <Button onClick={downloadFile} className="w-full" size="lg">
           <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />

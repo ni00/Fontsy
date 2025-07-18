@@ -68,10 +68,12 @@ export default function LogoGenerator() {
                   customWidth={logoGenerator.customWidth}
                   customHeight={logoGenerator.customHeight}
                   outputFormat={logoGenerator.outputFormat}
+                  quality={logoGenerator.quality}
                   setResolution={logoGenerator.setResolution}
                   setCustomWidth={logoGenerator.setCustomWidth}
                   setCustomHeight={logoGenerator.setCustomHeight}
                   setOutputFormat={logoGenerator.setOutputFormat}
+                  setQuality={logoGenerator.setQuality}
                   downloadFile={logoGenerator.downloadFile}
                 />
               </TabsContent>
